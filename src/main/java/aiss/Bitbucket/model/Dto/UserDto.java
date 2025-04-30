@@ -7,7 +7,7 @@ public class UserDto {
     @JsonProperty("uuid")
     private String id;
 
-    @JsonProperty("nickname")
+    @JsonProperty("username")
     private String username;
 
     @JsonProperty("display_name")

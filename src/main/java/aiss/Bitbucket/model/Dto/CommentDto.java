@@ -1,19 +1,37 @@
 package aiss.Bitbucket.model.Dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CommentDto {
 
     // ATRIBUTOS
+    @JsonProperty("type")
     private String type;
+
+    @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("created_on")
     private String created_on;
+
+    @JsonProperty("update_on")
     private String updated_on;
+
+    @JsonProperty("content")
     private Content content;
+
+    @JsonProperty("user")
     private User user;
+
+    @JsonProperty("deleted")
     private boolean deleted;
     private Inline inline;
+
+    @JsonProperty("links")
     private Links links;
+
+    @JsonProperty("commit")
     private Commit commit;
 
 

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>aiss.Bitbucket</groupId>
-	<artifactId>model</artifactId>
+	<artifactId>BitBuckedMiner</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>model</name>
 	<description>Proyecto AISS de API BitBucket</description>
