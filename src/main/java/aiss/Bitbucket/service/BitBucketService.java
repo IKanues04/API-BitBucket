@@ -1,9 +1,6 @@
 package aiss.Bitbucket.service;
 
-import aiss.Bitbucket.model.Comment;
-import aiss.Bitbucket.model.Commit;
-import aiss.Bitbucket.model.Issue;
-import aiss.Bitbucket.model.User;
+import aiss.Bitbucket.model.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +22,21 @@ public class BitBucketService {
     @Value("${bitbucket.api.url}")
     private String apiUrl;
 
-    private final String workspace = "jwalton";
-    private final String repoSlug = "opup";
+    private final String workspace = "snakeyaml";
+    private final String repoSlug = "snakeyaml";
+
+    // METODO GET PARA OBTENER INFO DEL PROYECTO Y CREARLO
+    public Project getProjectInfo() {
+        String url = apiUrl + "/repositories/" + workspace + "/" + repoSlug;
+        ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
+        JsonNode body = response.getBody();
+
+        Project info = new Project();
+        info.setId(body.path("uuid").asText());
+        info.setName(body.path("name").asText());
+        info.setWebUrl(body.path("links").path("html").path("href").asText());
+        return info;
+    }
 
     // USO EL JsonNode CUANDO NO SE EXACTAMENTE LA ESTRUCTURA POJO
     public List<Commit> getCommits() {
@@ -80,17 +90,17 @@ public class BitBucketService {
                 // Etiquetas
                 List<String> labels = new ArrayList<>();
                 if (node.has("kind")) {
-                    labels.add(node.get("kind").asText());
+                    labels.add(node.path("kind").asText());
                 }
                 issue.setLabels(labels);
 
                 // Asignado
-                if (node.has("assignee") && !node.get("assignee").isNull()) {
+                if (node.has("assignee") && !node.path("assignee").isNull()) {
                     User assignee = new User();
-                    assignee.setId(node.get("assignee").get("uuid").asText());
-                    assignee.setUsername(node.get("assignee").get("username").asText());
-                    assignee.setName(node.get("assignee").get("display_name").asText());
-                    assignee.setWebUrl(node.get("assignee").get("links").get("html").get("href").asText());
+                    assignee.setId(node.path("assignee").path("uuid").asText());
+                    assignee.setUsername(node.path("assignee").path("username").asText());
+                    assignee.setName(node.path("assignee").path("display_name").asText());
+                    assignee.setWebUrl(node.path("assignee").path("links").path("html").path("href").asText());
                     issue.setAssignee(assignee);
                 }
 
@@ -117,25 +127,25 @@ public class BitBucketService {
 
 
     public List<Comment> getComments(String issueId) {
-        String url = apiUrl + "/issues/" + issueId + "/comments";
+        String url = apiUrl + "/repositories/" + workspace + "/" + repoSlug + "/issues/" + issueId + "/comments";
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
         JsonNode values = response.getBody().get("values");
 
         List<Comment> comments = new ArrayList<>();
         for (JsonNode node : values) {
             Comment comment = new Comment();
-            comment.setId(node.get("id").asText());
-            comment.setBody(node.get("content").get("raw").asText());
-            comment.setCreatedAt(node.get("created_on").asText());
-            comment.setUpdatedAt(node.get("updated_on").asText());
+            comment.setId(node.path("id").asText());
+            comment.setBody(node.path("content").path("raw").asText());
+            comment.setCreatedAt(node.path("created_on").asText());
+            comment.setUpdatedAt(node.path("updated_on").asText());
 
             // Autor
-            if (node.has("user") && !node.get("user").isNull()) {
+            if (node.has("user") && !node.path("user").isNull()) {
                 User author = new User();
-                author.setId(node.get("user").get("uuid").asText());
-                author.setUsername(node.get("user").get("username").asText());
-                author.setName(node.get("user").get("display_name").asText());
-                author.setWebUrl(node.get("user").get("links").get("html").get("href").asText());
+                author.setId(node.path("user").path("uuid").asText());
+                author.setUsername(node.path("user").path("username").asText());
+                author.setName(node.path("user").path("display_name").asText());
+                author.setWebUrl(node.path("user").path("links").path("html").path("href").asText());
                 comment.setAuthor(author);
             }
 

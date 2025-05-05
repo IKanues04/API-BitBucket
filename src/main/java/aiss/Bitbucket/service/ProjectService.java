@@ -4,6 +4,7 @@ import aiss.Bitbucket.model.Comment;
 import aiss.Bitbucket.model.Commit;
 import aiss.Bitbucket.model.Dto.ProjectDto;
 import aiss.Bitbucket.model.Issue;
+import aiss.Bitbucket.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,12 @@ public class ProjectService {
 
     public ProjectDto buildProjectDto() {
         ProjectDto dto = new ProjectDto();
-        dto.setId("opup"); // o sacar de config
-        dto.setName("Repositorio OPUP");
-        dto.setWebUrl("https://bitbucket.org/jwalton/opup");
-        dto.setCommits(
-                bitbucketService.getCommits()
-        );
+        Project info = bitbucketService.getProjectInfo();
+
+        dto.setId(info.getId());
+        dto.setName(info.getName());
+        dto.setWebUrl(info.getWebUrl());
+        dto.setCommits(bitbucketService.getCommits());
         dto.setIssues(bitbucketService.getIssues());
         return dto;
     }

@@ -11,7 +11,7 @@
 	<groupId>aiss.Bitbucket</groupId>
 	<artifactId>BitBuckedMiner</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>model</name>
+	<name>BitBucketMiner</name>
 	<description>Proyecto AISS de API BitBucket</description>
 	<url/>
 	<licenses>
