@@ -1,42 +1,15 @@
 package aiss.Bitbucket.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Commit {
 
-    @JsonProperty("id")
     private String id;
-
-    @JsonProperty("title")
     private String title;
-
-    @JsonProperty("message")
     private String message;
-
-    @JsonProperty("author_name")
-    private String author_name;
-
-    @JsonProperty("author_email")
-    private String author_email;
-
-    @JsonProperty("authored_date")
-    private String authored_date;
-
-    @JsonProperty("web_url")
-    private String web_url;
-
-    // CONSTRUCTOR
-    public Commit(String id, String title, String message, String author_name, String author_email, String authored_date, String web_url) {
-        this.id = id;
-        this.title = title;
-        this.message = message;
-        this.author_name = author_name;
-        this.author_email = author_email;
-        this.authored_date = authored_date;
-        this.web_url = web_url;
-    }
-
-    // GETTERS Y SETTERS
+    private String authorName;
+    private String authorEmail;
+    private String authoredDate;
+    private String webUrl;
 
     public String getId() {
         return id;
@@ -62,50 +35,35 @@ public class Commit {
         this.message = message;
     }
 
-    public String getAuthor_name() {
-        return author_name;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public void setAuthor_name(String author_name) {
-        this.author_name = author_name;
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
-    public String getAuthor_email() {
-        return author_email;
+    public String getAuthorEmail() {
+        return authorEmail;
     }
 
-    public void setAuthor_email(String author_email) {
-        this.author_email = author_email;
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 
-    public String getAuthored_date() {
-        return authored_date;
+    public String getAuthoredDate() {
+        return authoredDate;
     }
 
-    public void setAuthored_date(String authored_date) {
-        this.authored_date = authored_date;
+    public void setAuthoredDate(String authoredDate) {
+        this.authoredDate = authoredDate;
     }
 
-    public String getWeb_url() {
-        return web_url;
+    public String getWebUrl() {
+        return webUrl;
     }
 
-    public void setWeb_url(String web_url) {
-        this.web_url = web_url;
-    }
-
-    // toString
-
-    @Override
-    public String toString() {
-        return "Commit{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", message='" + message + '\'' +
-                ", author_name='" + author_name + '\'' +
-                ", author_email='" + author_email + '\'' +
-                ", authored_date='" + authored_date + '\'' +
-                ", web_url='" + web_url + '\'' +
-                '}';
+    public void setWebUrl(String webUrl) {
+        this.webUrl = webUrl;
     }
 }

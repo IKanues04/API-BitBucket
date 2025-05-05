@@ -12,33 +12,10 @@ public class Issue {
     private String updatedAt;
     private String closedAt;
     private List<String> labels;
-    private int votes;
-
+    private Integer votes;
     private User assignee;
     private User author;
     private List<Comment> comments;
-
-    // INICIALIZACION DE ATRIBUTOS
-
-    public Issue() {}
-
-    public Issue(String id, String title, String description, String state, String createdAt, String updatedAt, String closedAt, List<String> labels, int votes, User assignee, User author, List<Comment> comments) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.state = state;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.closedAt = closedAt;
-        this.labels = labels;
-        this.votes = votes;
-        this.assignee = assignee;
-        this.author = author;
-        this.comments = comments;
-    }
-
-    // SETTERS Y GETTERS
-
 
     public String getId() {
         return id;
@@ -104,11 +81,11 @@ public class Issue {
         this.labels = labels;
     }
 
-    public int getVotes() {
+    public Integer getVotes() {
         return votes;
     }
 
-    public void setVotes(int votes) {
+    public void setVotes(Integer votes) {
         this.votes = votes;
     }
 
@@ -134,23 +111,5 @@ public class Issue {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    @Override
-    public String toString() {
-        return "Issue{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", state='" + state + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", closedAt='" + closedAt + '\'' +
-                ", labels=" + labels +
-                ", votes=" + votes +
-                ", assignee=" + assignee +
-                ", author=" + author +
-                ", comments=" + comments +
-                '}';
     }
 }

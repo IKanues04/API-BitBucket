@@ -1,31 +1,14 @@
 package aiss.Bitbucket.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 public class Comment {
 
-    @JsonProperty("id")
     private String id;
-
-    @JsonProperty("body")
     private String body;
-
-    @JsonProperty("created_at")
     private String createdAt;
-
-    @JsonProperty("updated_at")
     private String updatedAt;
-
-
-    public Comment(String id, String body, String createdAt, String updatedAt) {
-        this.id = id;
-        this.body = body;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    // GETTERS Y SETTERS
-
+    private User author;
 
     public String getId() {
         return id;
@@ -59,14 +42,11 @@ public class Comment {
         this.updatedAt = updatedAt;
     }
 
+    public User getAuthor() {
+        return author;
+    }
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id='" + id + '\'' +
-                ", body='" + body + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt +
-                '}';
+    public void setAuthor(User author) {
+        this.author = author;
     }
 }

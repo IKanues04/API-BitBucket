@@ -5,30 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
 
-    @JsonProperty("id")
     private String id;
-
-    @JsonProperty("username")
     private String username;
-
-    @JsonProperty("name")
     private String name;
-
-    @JsonProperty("avatar_url")
-    private String avatarUrl;
-
-    @JsonProperty("web_url")
     private String webUrl;
-
-    public User(String id, String username, String name, String avatarUrl, String webUrl) {
-        this.id = id;
-        this.username = username;
-        this.name = name;
-        this.avatarUrl = avatarUrl;
-        this.webUrl = webUrl;
-    }
-
-    // GETTERS Y SETTERS
 
     public String getId() {
         return id;
@@ -54,32 +34,12 @@ public class User {
         this.name = name;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
     public String getWebUrl() {
         return webUrl;
     }
 
     public void setWebUrl(String webUrl) {
         this.webUrl = webUrl;
-    }
-
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
-                ", avatarUrl='" + avatarUrl + '\'' +
-                ", webUrl='" + webUrl + '\'' +
-                '}';
     }
 }
 

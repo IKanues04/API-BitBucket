@@ -1,69 +1,27 @@
 package aiss.Bitbucket.model.Dto;
 
+import aiss.Bitbucket.model.Commit;
+import aiss.Bitbucket.model.Issue;
+
+import java.util.List;
+
 public class ProjectDto {
     // ATRIBUTOS
-    private String type;
-    private User owner;
-    private Workspace workspace;
-    private String key;
-    private String uuid;
-    private boolean is_private;
+    private String id;
     private String name;
-    private String description;
-    private ProjectLinks links;
-    private String created_on;
-    private String updated_on;
-    private boolean has_publicly_visible_repos;
+    private String webUrl;
+    private List<Commit> commits;
+    private List<Issue> issues;
 
-    // Getters and setters
+    // Getters and setters del original
 
 
-    public String getType() {
-        return type;
+    public String getId() {
+        return id;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public Workspace getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(Workspace workspace) {
-        this.workspace = workspace;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public boolean isIs_private() {
-        return is_private;
-    }
-
-    public void setIs_private(boolean is_private) {
-        this.is_private = is_private;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -74,279 +32,229 @@ public class ProjectDto {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getWebUrl() {
+        return webUrl;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setWebUrl(String webUrl) {
+        this.webUrl = webUrl;
     }
 
-    public ProjectLinks getLinks() {
-        return links;
+    public List<Commit> getCommits() {
+        return commits;
     }
 
-    public void setLinks(ProjectLinks links) {
-        this.links = links;
+    public void setCommits(List<Commit> commits) {
+        this.commits = commits;
     }
 
-    public String getCreated_on() {
-        return created_on;
+    public List<Issue> getIssues() {
+        return issues;
     }
 
-    public void setCreated_on(String created_on) {
-        this.created_on = created_on;
+    public void setIssues(List<Issue> issues) {
+        this.issues = issues;
     }
 
-    public String getUpdated_on() {
-        return updated_on;
-    }
 
-    public void setUpdated_on(String updated_on) {
-        this.updated_on = updated_on;
-    }
+    // SUBCLASES NUEVAS
+    public static class CommitInfo {
+        private String id;
+        private String title;
+        private String message;
+        private String author;
+        private String date;
 
-    public boolean isHas_publicly_visible_repos() {
-        return has_publicly_visible_repos;
-    }
-
-    public void setHas_publicly_visible_repos(boolean has_publicly_visible_repos) {
-        this.has_publicly_visible_repos = has_publicly_visible_repos;
-    }
-
-    // SUBCLASE USER
-    public static class User {
-        private String display_name;
-        private UserLinks links;
-        private String type;
-        private String uuid;
-        private String account_id;
-        private String nickname;
-
-        // Getters and setters
-
-        public String getDisplay_name() {
-            return display_name;
+        public String getId() {
+            return id;
         }
 
-        public void setDisplay_name(String display_name) {
-            this.display_name = display_name;
+        public void setId(String id) {
+            this.id = id;
         }
 
-        public UserLinks getLinks() {
-            return links;
+        public String getTitle() {
+            return title;
         }
 
-        public void setLinks(UserLinks links) {
-            this.links = links;
+        public void setTitle(String title) {
+            this.title = title;
         }
 
-        public String getType() {
-            return type;
+        public String getMessage() {
+            return message;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setMessage(String message) {
+            this.message = message;
         }
 
-        public String getUuid() {
-            return uuid;
+        public String getAuthor() {
+            return author;
         }
 
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
+        public void setAuthor(String author) {
+            this.author = author;
         }
 
-        public String getAccount_id() {
-            return account_id;
+        public String getDate() {
+            return date;
         }
 
-        public void setAccount_id(String account_id) {
-            this.account_id = account_id;
-        }
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        public void setNickname(String nickname) {
-            this.nickname = nickname;
+        public void setDate(String date) {
+            this.date = date;
         }
     }
 
-    // SUBCLASE USERLINKS
-    public static class UserLinks {
-        private Link self;
-        private Link avatar;
-        private Link html;
+    public static class IssueInfo {
+        private String id;
+        private String title;
+        private String description;
+        private String state;
+        private String createdAt;
+        private String updatedAt;
+        private String closedAt;
+        private Integer votes;
+        private List<String> labels;
+        private String assignee;
+        private List<CommentInfo> comments;
 
-        // Getters and setters
-
-        public Link getSelf() {
-            return self;
+        public String getId() {
+            return id;
         }
 
-        public void setSelf(Link self) {
-            this.self = self;
+        public void setId(String id) {
+            this.id = id;
         }
 
-        public Link getAvatar() {
-            return avatar;
+        public String getTitle() {
+            return title;
         }
 
-        public void setAvatar(Link avatar) {
-            this.avatar = avatar;
+        public void setTitle(String title) {
+            this.title = title;
         }
 
-        public Link getHtml() {
-            return html;
+        public String getDescription() {
+            return description;
         }
 
-        public void setHtml(Link html) {
-            this.html = html;
-        }
-    }
-
-    // SUBCLASE WORKSPACE
-    public static class Workspace {
-        private String type;
-        private String uuid;
-        private String name;
-        private String slug;
-        private WorkspaceLinks links;
-
-        // Getters and setters
-
-        public String getType() {
-            return type;
+        public void setDescription(String description) {
+            this.description = description;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public String getState() {
+            return state;
         }
 
-        public String getUuid() {
-            return uuid;
+        public void setState(String state) {
+            this.state = state;
         }
 
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
+        public String getCreatedAt() {
+            return createdAt;
         }
 
-        public String getName() {
-            return name;
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public String getUpdatedAt() {
+            return updatedAt;
         }
 
-        public String getSlug() {
-            return slug;
+        public void setUpdatedAt(String updatedAt) {
+            this.updatedAt = updatedAt;
         }
 
-        public void setSlug(String slug) {
-            this.slug = slug;
+        public String getClosedAt() {
+            return closedAt;
         }
 
-        public WorkspaceLinks getLinks() {
-            return links;
+        public void setClosedAt(String closedAt) {
+            this.closedAt = closedAt;
         }
 
-        public void setLinks(WorkspaceLinks links) {
-            this.links = links;
-        }
-    }
-
-    // SUBCLASE WORKSPACE LINKS
-    public static class WorkspaceLinks {
-        private Link avatar;
-        private Link html;
-        private Link self;
-
-        // Getters and setters
-
-        public Link getAvatar() {
-            return avatar;
+        public Integer getVotes() {
+            return votes;
         }
 
-        public void setAvatar(Link avatar) {
-            this.avatar = avatar;
+        public void setVotes(Integer votes) {
+            this.votes = votes;
         }
 
-        public Link getHtml() {
-            return html;
+        public List<String> getLabels() {
+            return labels;
         }
 
-        public void setHtml(Link html) {
-            this.html = html;
+        public void setLabels(List<String> labels) {
+            this.labels = labels;
         }
 
-        public Link getSelf() {
-            return self;
+        public String getAssignee() {
+            return assignee;
         }
 
-        public void setSelf(Link self) {
-            this.self = self;
+        public void setAssignee(String assignee) {
+            this.assignee = assignee;
+        }
+
+        public List<CommentInfo> getComments() {
+            return comments;
+        }
+
+        public void setComments(List<CommentInfo> comments) {
+            this.comments = comments;
         }
     }
 
-    // SUBCLASE PROJECT LINKS
-    public static class ProjectLinks {
-        private Link self;
-        private Link html;
-        private Link repositories;
-        private Link avatar;
+    public static class CommentInfo {
+        private String id;
+        private String body;
+        private String createdAt;
+        private String updatedAt;
+        private String author;
 
-        // Getters and setters
-
-        public Link getSelf() {
-            return self;
+        public String getId() {
+            return id;
         }
 
-        public void setSelf(Link self) {
-            this.self = self;
+        public void setId(String id) {
+            this.id = id;
         }
 
-        public Link getHtml() {
-            return html;
+        public String getBody() {
+            return body;
         }
 
-        public void setHtml(Link html) {
-            this.html = html;
+        public void setBody(String body) {
+            this.body = body;
         }
 
-        public Link getRepositories() {
-            return repositories;
+        public String getCreatedAt() {
+            return createdAt;
         }
 
-        public void setRepositories(Link repositories) {
-            this.repositories = repositories;
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
         }
 
-        public Link getAvatar() {
-            return avatar;
+        public String getUpdatedAt() {
+            return updatedAt;
         }
 
-        public void setAvatar(Link avatar) {
-            this.avatar = avatar;
-        }
-    }
-
-    // SUBCLASE LINK
-    public static class Link {
-        private String href;
-
-        // Getter and setter
-        public String getHref() {
-            return href;
+        public void setUpdatedAt(String updatedAt) {
+            this.updatedAt = updatedAt;
         }
 
-        public void setHref(String href) {
-            this.href = href;
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
         }
     }
-
 
 }
 
