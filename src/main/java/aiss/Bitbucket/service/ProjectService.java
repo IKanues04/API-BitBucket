@@ -10,15 +10,15 @@ public class ProjectService {
     @Autowired
     private BitBucketService bitbucketService;
 
-    public Project buildProject() {
+    public Project buildProject(String owner, String repo) {
         Project project = new Project();
-        Project info = bitbucketService.getProjectInfo();
+        Project info = bitbucketService.getProjectInfo(owner, repo);
 
         project.setId(info.getId());
         project.setName(info.getName());
         project.setWeb_url(info.getWeb_url());
-        project.setCommits(bitbucketService.getCommits());
-        project.setIssues(bitbucketService.getIssues());
+        project.setCommits(bitbucketService.getCommits(owner, repo));
+        project.setIssues(bitbucketService.getIssues(owner, repo));
         return project;
     }
 

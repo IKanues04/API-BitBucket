@@ -2,14 +2,13 @@ package aiss.Bitbucket.controller;
 
 import aiss.Bitbucket.model.Project;
 import aiss.Bitbucket.service.ProjectService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/bitbucketminer")
 public class ProjectController {
 
     @Autowired
@@ -18,15 +17,15 @@ public class ProjectController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @GetMapping
-    public Project getProjectData() {
-        return projectService.buildProject();
+    @GetMapping("/{workspace}/{repo_slug}")
+    public Project getProjectData(@PathVariable String workspace, @PathVariable String repo_slug) {
+        return projectService.buildProject(workspace, repo_slug);
     }
 
 
-    @PostMapping
-    public ResponseEntity<String> sendProjectData() {
-        Project dto = projectService.buildProject();
+    @PostMapping("/{workspace}/{repo_slug}")
+    public ResponseEntity<String> sendProjectData(@PathVariable String workspace, @PathVariable String repo_slug) {
+        Project dto = projectService.buildProject(workspace, repo_slug);
         
         
         //HEADERS

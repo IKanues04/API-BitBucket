@@ -22,12 +22,12 @@ public class BitBucketService {
     @Value("${bitbucket.api.url}")
     private String apiUrl;
 
-    private final String workspace = "snakeyaml";
-    private final String repoSlug = "snakeyaml";
+    // workspace = "snakeyaml";
+    // repo = "snakeyaml";
 
     // METODO GET PARA OBTENER INFO DEL PROYECTO Y CREARLO
-    public Project getProjectInfo() {
-        String url = apiUrl + "/repositories/" + workspace + "/" + repoSlug;
+    public Project getProjectInfo(String workspace, String repo) {
+        String url = apiUrl + "/repositories/" + workspace + "/" + repo;
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
         JsonNode body = response.getBody();
 
@@ -39,8 +39,8 @@ public class BitBucketService {
     }
 
     // USO EL JsonNode CUANDO NO SE EXACTAMENTE LA ESTRUCTURA POJO
-    public List<Commit> getCommits() {
-        String url = apiUrl + "/repositories/" + workspace + "/" + repoSlug + "/commits";
+    public List<Commit> getCommits(String workspace, String repo) {
+        String url = apiUrl + "/repositories/" + workspace + "/" + repo + "/commits";
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
 
         JsonNode body = response.getBody();
@@ -68,8 +68,8 @@ public class BitBucketService {
     }
 
 
-    public List<Issue> getIssues() {
-        String url = apiUrl + "/repositories/" + workspace + "/" + repoSlug + "/issues";
+    public List<Issue> getIssues(String workspace, String repo) {
+        String url = apiUrl + "/repositories/" + workspace + "/" + repo + "/issues";
         List<Issue> issues = new ArrayList<>();
 
         try {
@@ -115,7 +115,7 @@ public class BitBucketService {
                     issue.setAuthor(reporter);
                 }
                 // Comentarios
-                issue.setComments(getComments(issue.getId()));
+                issue.setComments(getComments(workspace, repo, issue.getId()));
 
                 issues.add(issue);
             }
@@ -123,7 +123,7 @@ public class BitBucketService {
             String responseBody = e.getResponseBodyAsString();
             if (responseBody.contains("Repository has no issue tracker")) {
                 // Tracker desactivado, devolvemos lista vacía
-                System.out.println("Issue tracker desactivado para: " + repoSlug);
+                System.out.println("Issue tracker desactivado para: " + repo);
                 return Collections.emptyList();
             } else {
                 // Otro error, lo lanzamos
@@ -136,8 +136,8 @@ public class BitBucketService {
 
 
 
-    public List<Comment> getComments(String issueId) {
-        String url = apiUrl + "/repositories/" + workspace + "/" + repoSlug + "/issues/" + issueId + "/comments";
+    public List<Comment> getComments(String workspace, String repo, String issueId) {
+        String url = apiUrl + "/repositories/" + workspace + "/" + repo + "/issues/" + issueId + "/comments";
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
         JsonNode values = response.getBody().path("values");
 
