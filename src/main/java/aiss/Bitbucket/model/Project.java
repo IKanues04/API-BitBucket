@@ -10,6 +10,9 @@ public class Project {
     private String name;
     private String webUrl;
 
+    private List<Commit> commits;
+    private List<Issue> issues;
+
     public String getId() {
         return id;
     }
@@ -32,5 +35,21 @@ public class Project {
 
     public void setWebUrl(String webUrl) {
         this.webUrl = webUrl;
+    }
+
+    public List<Commit> getCommits() {
+        return commits;
+    }
+
+    public void setCommits(List<Commit> commits) {
+        this.commits = commits;
+    }
+
+    public List<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(List<Issue> issues) {
+        this.issues = issues;
     }
 }

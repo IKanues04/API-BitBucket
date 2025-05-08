@@ -1,6 +1,6 @@
 package aiss.Bitbucket.controller;
 
-import aiss.Bitbucket.model.Dto.ProjectDto;
+import aiss.Bitbucket.model.Project;
 import aiss.Bitbucket.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -18,21 +18,22 @@ public class ProjectController {
     private RestTemplate restTemplate;
 
     @GetMapping
-    public ProjectDto getProjectData() {
-        return projectService.buildProjectDto();
+    public Project getProjectData() {
+        return projectService.buildProject();
     }
 
 
     @PostMapping
     public ResponseEntity<String> sendProjectData() {
-        ProjectDto dto = projectService.buildProjectDto();
+        Project dto = projectService.buildProject();
+        System.out.println("Proyecto a enviar: " + dto); // COMPROBAR QUE NO ESTA VACIO
 
-        String targetApiUrl = "http://localhost:8081/api/projects"; // Modifica según tu nueva API
+        String targetApiUrl = "http://localhost:8080/gitminer/projects"; // Modifica según tu nueva API
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<ProjectDto> request = new HttpEntity<>(dto, headers);
+        HttpEntity<Project> request = new HttpEntity<>(dto, headers);
 
         ResponseEntity<String> response = restTemplate.postForEntity(targetApiUrl, request, String.class);
 

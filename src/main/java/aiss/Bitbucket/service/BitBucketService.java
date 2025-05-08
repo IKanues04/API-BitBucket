@@ -94,6 +94,7 @@ public class BitBucketService {
                 }
                 issue.setLabels(labels);
 
+
                 // Asignado
                 if (node.has("assignee") && !node.path("assignee").isNull()) {
                     User assignee = new User();
@@ -103,6 +104,8 @@ public class BitBucketService {
                     assignee.setWebUrl(node.path("assignee").path("links").path("html").path("href").asText());
                     issue.setAssignee(assignee);
                 }
+
+
 
                 // Comentarios
                 issue.setComments(getComments(issue.getId()));
