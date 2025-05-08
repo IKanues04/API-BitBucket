@@ -6,10 +6,10 @@ public class Commit {
     private String id;
     private String title;
     private String message;
-    private String authorName;
-    private String authorEmail;
-    private String authoredDate;
-    private String webUrl;
+    private String author_name;
+    private String author_email;
+    private String authored_date;
+    private String web_url;
 
     public String getId() {
         return id;
@@ -35,35 +35,35 @@ public class Commit {
         this.message = message;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public String getAuthor_name() {
+        return author_name;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setAuthor_name(String author_name) {
+        this.author_name = author_name;
     }
 
-    public String getAuthorEmail() {
-        return authorEmail;
+    public String getAuthor_email() {
+        return author_email;
     }
 
-    public void setAuthorEmail(String authorEmail) {
-        this.authorEmail = authorEmail;
+    public void setAuthor_email(String author_email) {
+        this.author_email = author_email;
     }
 
-    public String getAuthoredDate() {
-        return authoredDate;
+    public String getAuthored_date() {
+        return authored_date;
     }
 
-    public void setAuthoredDate(String authoredDate) {
-        this.authoredDate = authoredDate;
+    public void setAuthored_date(String authored_date) {
+        this.authored_date = authored_date;
     }
 
-    public String getWebUrl() {
-        return webUrl;
+    public String getWeb_url() {
+        return web_url;
     }
 
-    public void setWebUrl(String webUrl) {
-        this.webUrl = webUrl;
+    public void setWeb_url(String web_url) {
+        this.web_url = web_url;
     }
 }

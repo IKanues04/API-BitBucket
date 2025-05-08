@@ -4,8 +4,6 @@ import aiss.Bitbucket.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
-
 @Service
 public class ProjectService {
 
@@ -18,7 +16,7 @@ public class ProjectService {
 
         project.setId(info.getId());
         project.setName(info.getName());
-        project.setWebUrl(info.getWebUrl());
+        project.setWeb_url(info.getWeb_url());
         project.setCommits(bitbucketService.getCommits());
         project.setIssues(bitbucketService.getIssues());
         return project;

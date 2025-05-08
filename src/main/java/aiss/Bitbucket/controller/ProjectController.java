@@ -2,6 +2,7 @@ package aiss.Bitbucket.controller;
 
 import aiss.Bitbucket.model.Project;
 import aiss.Bitbucket.service.ProjectService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +27,18 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<String> sendProjectData() {
         Project dto = projectService.buildProject();
-        System.out.println("Proyecto a enviar: " + dto); // COMPROBAR QUE NO ESTA VACIO
-
-        String targetApiUrl = "http://localhost:8080/gitminer/projects"; // Modifica según tu nueva API
-
+        
+        
+        //HEADERS
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         HttpEntity<Project> request = new HttpEntity<>(dto, headers);
+        
+        // LINK A ENVIAR AL API GITMINER
+        String targetApiUrl = "http://localhost:8080/gitminer/projects/recive";
 
-        ResponseEntity<String> response = restTemplate.postForEntity(targetApiUrl, request, String.class);
+        ResponseEntity<Project> response = restTemplate.postForEntity(targetApiUrl, request, Project.class);
 
-        return ResponseEntity.status(response.getStatusCode()).body("Proyecto enviado correctamente.");
+        return ResponseEntity.ok("Datos reenviados a API B: " + response.getBody());
     }
 }

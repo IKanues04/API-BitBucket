@@ -34,7 +34,7 @@ public class BitBucketService {
         Project info = new Project();
         info.setId(body.path("uuid").asText());
         info.setName(body.path("name").asText());
-        info.setWebUrl(body.path("links").path("html").path("href").asText());
+        info.setWeb_url(body.path("links").path("html").path("href").asText());
         return info;
     }
 
@@ -58,10 +58,10 @@ public class BitBucketService {
             commit.setId(node.path("hash").asText(""));
             commit.setTitle(node.path("summary").path("raw").asText(""));
             commit.setMessage(node.path("message").asText(""));
-            commit.setAuthorName(node.path("author").path("user").path("display_name").asText(""));
-            commit.setAuthorEmail(node.path("author").path("raw").asText(""));
-            commit.setAuthoredDate(node.path("date").asText(""));
-            commit.setWebUrl(node.path("links").path("html").path("href").asText(""));
+            commit.setAuthor_name(node.path("author").path("user").path("display_name").asText("Revisa en el authorEmail ya que ahi esta tanto el nombre como el correo, nose cosas de BitBucket"));
+            commit.setAuthor_email(node.path("author").path("raw").asText(""));
+            commit.setAuthored_date(node.path("date").asText(""));
+            commit.setWeb_url(node.path("links").path("html").path("href").asText(""));
             commits.add(commit);
         }
         return commits;
@@ -74,18 +74,18 @@ public class BitBucketService {
 
         try {
             ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
-            JsonNode values = response.getBody().get("values");
+            JsonNode values = response.getBody().path("values");
 
             for (JsonNode node : values) {
                 Issue issue = new Issue();
-                issue.setId(node.get("id").asText());
-                issue.setTitle(node.get("title").asText());
-                issue.setDescription(node.get("content").get("raw").asText());
-                issue.setState(node.get("state").asText());
-                issue.setCreatedAt(node.get("created_on").asText());
-                issue.setUpdatedAt(node.get("updated_on").asText());
-                issue.setClosedAt(node.get("closed_on") != null ? node.get("closed_on").asText() : null);
-                issue.setVotes(node.get("votes").asInt());
+                issue.setId(node.path("id").asText());
+                issue.setTitle(node.path("title").asText());
+                issue.setDescription(node.path("content").path("raw").asText());
+                issue.setState(node.path("state").asText());
+                issue.setCreated_at(node.path("created_on").asText());
+                issue.setUpdated_at(node.path("updated_on").asText());
+                issue.setClosed_at(node.path("closed_on").asText("No resuelto"));
+                issue.setVotes(node.path("votes").asInt());
 
                 // Etiquetas
                 List<String> labels = new ArrayList<>();
@@ -99,14 +99,21 @@ public class BitBucketService {
                 if (node.has("assignee") && !node.path("assignee").isNull()) {
                     User assignee = new User();
                     assignee.setId(node.path("assignee").path("uuid").asText());
-                    assignee.setUsername(node.path("assignee").path("username").asText());
+                    assignee.setUsername(node.path("assignee").path("username").asText("No hay username"));
                     assignee.setName(node.path("assignee").path("display_name").asText());
-                    assignee.setWebUrl(node.path("assignee").path("links").path("html").path("href").asText());
+                    assignee.setWeb_url(node.path("assignee").path("links").path("html").path("href").asText());
                     issue.setAssignee(assignee);
                 }
 
-
-
+                // Reporter
+                if (node.has("reporter") && !node.path("reporter").isNull()) {
+                    User reporter = new User();
+                    reporter.setId(node.path("reporter").path("uuid").asText());
+                    reporter.setUsername(node.path("reporter").path("username").asText("No hay username"));
+                    reporter.setName(node.path("reporter").path("display_name").asText());
+                    reporter.setWeb_url(node.path("reporter").path("links").path("html").path("href").asText());
+                    issue.setAuthor(reporter);
+                }
                 // Comentarios
                 issue.setComments(getComments(issue.getId()));
 
@@ -132,23 +139,23 @@ public class BitBucketService {
     public List<Comment> getComments(String issueId) {
         String url = apiUrl + "/repositories/" + workspace + "/" + repoSlug + "/issues/" + issueId + "/comments";
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
-        JsonNode values = response.getBody().get("values");
+        JsonNode values = response.getBody().path("values");
 
         List<Comment> comments = new ArrayList<>();
         for (JsonNode node : values) {
             Comment comment = new Comment();
             comment.setId(node.path("id").asText());
-            comment.setBody(node.path("content").path("raw").asText());
-            comment.setCreatedAt(node.path("created_on").asText());
-            comment.setUpdatedAt(node.path("updated_on").asText());
+            comment.setBody(node.path("content").path("raw").asText("No hay contenido"));
+            comment.setCreated_at(node.path("created_on").asText());
+            comment.setUpdated_at(node.path("updated_on").asText("No actualizado"));
 
             // Autor
             if (node.has("user") && !node.path("user").isNull()) {
                 User author = new User();
                 author.setId(node.path("user").path("uuid").asText());
-                author.setUsername(node.path("user").path("username").asText());
+                author.setUsername(node.path("user").path("username").asText("No hay username"));
                 author.setName(node.path("user").path("display_name").asText());
-                author.setWebUrl(node.path("user").path("links").path("html").path("href").asText());
+                author.setWeb_url(node.path("user").path("links").path("html").path("href").asText());
                 comment.setAuthor(author);
             }
 
