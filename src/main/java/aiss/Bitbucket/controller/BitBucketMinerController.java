@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/bitbucketminer")
-public class ProjectController {
+public class BitBucketMinerController {
 
     @Autowired
     private ProjectService projectService;
