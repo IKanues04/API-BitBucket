@@ -39,95 +39,105 @@ public class BitBucketService {
     }
 
     // USO EL JsonNode CUANDO NO SE EXACTAMENTE LA ESTRUCTURA POJO
-    public List<Commit> getCommits(String workspace, String repo) {
-        String url = apiUrl + "/repositories/" + workspace + "/" + repo + "/commits";
-        ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
-
-        JsonNode body = response.getBody();
-        System.out.println("Bitbucket Response Body (commits): " + body);
-
-        if (body == null || !body.has("values")) {
-            throw new RuntimeException("La respuesta no contiene el nodo 'values'. Revisa si la URL o el acceso son correctos.");
-        }
-
-        JsonNode values = body.get("values");
-
+    public List<Commit> getCommits(String workspace, String repo, int nCommits, int maxPages) {
         List<Commit> commits = new ArrayList<>();
-        for (JsonNode node : values) {
-            Commit commit = new Commit();
-            commit.setId(node.path("hash").asText(""));
-            commit.setTitle(node.path("summary").path("raw").asText(""));
-            commit.setMessage(node.path("message").asText(""));
-            commit.setAuthor_name(node.path("author").path("user").path("display_name").asText("Revisa en el authorEmail ya que ahi esta tanto el nombre como el correo, nose cosas de BitBucket"));
-            commit.setAuthor_email(node.path("author").path("raw").asText(""));
-            commit.setAuthored_date(node.path("date").asText(""));
-            commit.setWeb_url(node.path("links").path("html").path("href").asText(""));
-            commits.add(commit);
+        String url = apiUrl + "/repositories/" + workspace + "/" + repo + "/commits?pagelen=" + nCommits;
+        int pageCount = 0;
+
+        while (url != null && pageCount < maxPages) {
+            ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
+            JsonNode body = response.getBody();
+
+            if (body == null || !body.has("values"))
+                throw new RuntimeException("La respuesta no contiene el nodo 'values'. Revisa si la URL o el acceso son correctos.");
+
+            for (JsonNode node : body.get("values")) {
+                Commit commit = new Commit();
+                commit.setId(node.path("hash").asText(""));
+                commit.setTitle(node.path("summary").path("raw").asText(""));
+                commit.setMessage(node.path("message").asText(""));
+                commit.setAuthor_name(node.path("author").path("user").path("display_name").asText("Revisa en el authorEmail ya que ahi esta tanto el nombre como el correo, nose cosas de BitBucket"));
+                commit.setAuthor_email(node.path("author").path("raw").asText(""));
+                commit.setAuthored_date(node.path("date").asText(""));
+                commit.setWeb_url(node.path("links").path("html").path("href").asText(""));
+                commits.add(commit);
+            }
+            System.out.println("Bitbucket Response Body (commits): " + body);
+
+            url = body.has("next") ? body.get("next").asText(null) : null;
+            pageCount++;
         }
         return commits;
     }
 
 
-    public List<Issue> getIssues(String workspace, String repo) {
-        String url = apiUrl + "/repositories/" + workspace + "/" + repo + "/issues";
+    public List<Issue> getIssues(String workspace, String repo, int nIssues, int maxPages) {
+        String url = apiUrl + "/repositories/" + workspace + "/" + repo + "/issues?pagelen=" + nIssues;
         List<Issue> issues = new ArrayList<>();
+        int pageCount = 0;
 
-        try {
-            ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
-            JsonNode values = response.getBody().path("values");
+        while (url != null && pageCount < maxPages) {
 
-            for (JsonNode node : values) {
-                Issue issue = new Issue();
-                issue.setId(node.path("id").asText());
-                issue.setTitle(node.path("title").asText());
-                issue.setDescription(node.path("content").path("raw").asText());
-                issue.setState(node.path("state").asText());
-                issue.setCreated_at(node.path("created_on").asText());
-                issue.setUpdated_at(node.path("updated_on").asText());
-                issue.setClosed_at(node.path("closed_on").asText("No resuelto"));
-                issue.setVotes(node.path("votes").asInt());
+            try {
+                ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
+                JsonNode body = response.getBody();
+                JsonNode values = response.getBody().path("values");
 
-                // Etiquetas
-                List<String> labels = new ArrayList<>();
-                if (node.has("kind")) {
-                    labels.add(node.path("kind").asText());
+                for (JsonNode node : values) {
+                    Issue issue = new Issue();
+                    issue.setId(node.path("id").asText());
+                    issue.setTitle(node.path("title").asText());
+                    issue.setDescription(node.path("content").path("raw").asText());
+                    issue.setState(node.path("state").asText());
+                    issue.setCreated_at(node.path("created_on").asText());
+                    issue.setUpdated_at(node.path("updated_on").asText());
+                    issue.setClosed_at(node.path("closed_on").asText("No resuelto"));
+                    issue.setVotes(node.path("votes").asInt());
+
+                    // Etiquetas
+                    List<String> labels = new ArrayList<>();
+                    if (node.has("kind")) {
+                        labels.add(node.path("kind").asText());
+                    }
+                    issue.setLabels(labels);
+
+
+                    // Asignado
+                    if (node.has("assignee") && !node.path("assignee").isNull()) {
+                        User assignee = new User();
+                        assignee.setId(node.path("assignee").path("uuid").asText());
+                        assignee.setUsername(node.path("assignee").path("username").asText("No hay username"));
+                        assignee.setName(node.path("assignee").path("display_name").asText());
+                        assignee.setWeb_url(node.path("assignee").path("links").path("html").path("href").asText());
+                        issue.setAssignee(assignee);
+                    }
+
+                    // Reporter
+                    if (node.has("reporter") && !node.path("reporter").isNull()) {
+                        User reporter = new User();
+                        reporter.setId(node.path("reporter").path("uuid").asText());
+                        reporter.setUsername(node.path("reporter").path("username").asText("No hay username"));
+                        reporter.setName(node.path("reporter").path("display_name").asText());
+                        reporter.setWeb_url(node.path("reporter").path("links").path("html").path("href").asText());
+                        issue.setAuthor(reporter);
+                    }
+                    // Comentarios
+                    issue.setComments(getComments(workspace, repo, issue.getId()));
+
+                    issues.add(issue);
                 }
-                issue.setLabels(labels);
-
-
-                // Asignado
-                if (node.has("assignee") && !node.path("assignee").isNull()) {
-                    User assignee = new User();
-                    assignee.setId(node.path("assignee").path("uuid").asText());
-                    assignee.setUsername(node.path("assignee").path("username").asText("No hay username"));
-                    assignee.setName(node.path("assignee").path("display_name").asText());
-                    assignee.setWeb_url(node.path("assignee").path("links").path("html").path("href").asText());
-                    issue.setAssignee(assignee);
+                assert body != null;
+                url = body.has("next") ? body.get("next").asText(null) : null;
+                pageCount++;
+            } catch (HttpClientErrorException.NotFound e) {
+                if (e.getResponseBodyAsString().contains("Repository has no issue tracker")) {
+                    // Tracker desactivado, devolvemos lista vacía
+                    System.out.println("Issue tracker desactivado para: " + repo);
+                    return Collections.emptyList();
+                } else {
+                    // Otro error, lo lanzamos
+                    throw e;
                 }
-
-                // Reporter
-                if (node.has("reporter") && !node.path("reporter").isNull()) {
-                    User reporter = new User();
-                    reporter.setId(node.path("reporter").path("uuid").asText());
-                    reporter.setUsername(node.path("reporter").path("username").asText("No hay username"));
-                    reporter.setName(node.path("reporter").path("display_name").asText());
-                    reporter.setWeb_url(node.path("reporter").path("links").path("html").path("href").asText());
-                    issue.setAuthor(reporter);
-                }
-                // Comentarios
-                issue.setComments(getComments(workspace, repo, issue.getId()));
-
-                issues.add(issue);
-            }
-        } catch (HttpClientErrorException.NotFound e) {
-            String responseBody = e.getResponseBodyAsString();
-            if (responseBody.contains("Repository has no issue tracker")) {
-                // Tracker desactivado, devolvemos lista vacía
-                System.out.println("Issue tracker desactivado para: " + repo);
-                return Collections.emptyList();
-            } else {
-                // Otro error, lo lanzamos
-                throw e;
             }
         }
 
